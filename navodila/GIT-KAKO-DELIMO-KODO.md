@@ -9,30 +9,40 @@ Potem: Ai shrani spremembo v brskalniku → čez 1 minuto je gor. V ni vmes.
 
 ---
 
-# DEL 1 — V (naredi zdaj, 20 min)
+# DEL 1 — V (naredi zdaj, 15 min, samo brskalnik)
 
-Mapa na tvojem računalniku je že pripravljen Git repozitorij. Tri objave so že notri, `Claude outputs` in Office zaklepne datoteke so izključene.
+GitHub Desktop ne rabiš. Vse gre skozi github.com.
 
-## 1.1 Objavi na GitHub
-1. Naloži **GitHub Desktop** (desktop.github.com), prijavi se z GitHub računom (če ga nimaš, ga naredi na github.com — 2 minuti).
-2. V GitHub Desktop: **File → Add Local Repository** → izberi `Documents/fishdom-cleaner`.
-3. Klikni **Publish repository**. **Odkljukaj "Keep this code private"** — repozitorij naj bo zaseben.
+## 1.1 Naredi repozitorij
+1. Na **github.com** se prijavi (če računa nimaš, ga naredi — 2 minuti).
+2. Zgoraj desno **+ → New repository**.
+3. Ime: `fishdom-cleaner`. Izberi **Private**. **Ne** dodajaj README, .gitignore ne licence — pusti prazno.
+4. **Create repository**.
 
-## 1.2 Povabi Ai in Au
-Na github.com odpri repozitorij → **Settings → Collaborators → Add people** → njuni GitHub uporabniški imeni. Obe morata povabilo sprejeti po e-pošti.
+## 1.2 Naloži projekt
+Na strani praznega repozitorija klikni **uploading an existing file**.
+V Finderju odpri `Documents/fishdom-cleaner`, označi **vse** (Cmd+A) in povleci v okno brskalnika. Mapa `Claude outputs` naj ostane zunaj — je ne rabimo in je velika.
+Spodaj napiši `Fishdom Cleaner - stanje 15.09.2026` → **Commit changes**.
 
-## 1.3 Poveži Netlify (to je tisto, kar prihrani čas)
-1. Netlify → tvoj site → **Site configuration → Build & deploy → Link repository** → GitHub → izberi `fishdom-cleaner`.
+## 1.3 Povabi Ai in Au
+Repozitorij → **Settings → Collaborators → Add people** → njuni GitHub uporabniški imeni. Obe sprejmeta povabilo po e-pošti.
+
+## 1.4 Poveži Netlify (to je tisto, kar prihrani čas)
+1. Netlify → tvoj site → **Site configuration → Build & deploy → Link repository** → GitHub → `fishdom-cleaner`.
 2. Branch: `main`. Build command: **pusti prazno**. Publish directory: **pusti prazno ali `.`**. Functions directory: `netlify/functions`.
 3. Deploy.
 
-**Preveri takoj, da site še dela** — odpri `fishdom-cleaner.netlify.app`, fotografiraj smet, poglej, ali dobiš ribo. Gemini ključ v nastavitvah ostane nedotaknjen, a to preveri, ne predpostavljaj.
+**Preveri takoj, da site še dela** — odpri `fishdom-cleaner.netlify.app` in fotografiraj smet. Gemini ključ v nastavitvah ostane, a to preveri, ne predpostavljaj.
 
-Če karkoli pade: v Netlify pod **Deploys** klikni zadnji dobri deploy → **Publish deploy**. Site je takoj nazaj na staro. Drag-and-drop še vedno deluje kot rezerva.
+Če karkoli pade: Netlify → **Deploys** → zadnji dobri deploy → **Publish deploy**. Site je takoj nazaj. Drag-and-drop ostane kot rezerva.
 
-## 1.4 Kako odslej delaš ti
-V GitHub Desktop: levo vidiš, kaj se je spremenilo → spodaj levo napišeš eno vrstico, kaj si naredila → **Commit to main** → zgoraj **Push origin**. Čez minuto je na spletu.
-Preden začneš delati, vedno najprej **Fetch / Pull origin** — da potegneš, kar sta naredili onidve.
+## 1.5 Kako odslej objaviš mojo kodo
+Ko popravim kodo na tvojem računalniku, jo naložiš enako kot v koraku 1.2: v repozitoriju **Add file → Upload files**, povlečeš **samo tiste datoteke, ki so se spremenile** (povem ti katere — običajno `index.html`, `style.css`, `js/`, `sw.js`), napišeš eno vrstico in **Commit changes**.
+
+**Pomembno: nikoli ne naloži cele mape naenkrat po tem, ko sta Ai in Au že začeli delati.** Tvoja mapa na računalniku ne vidi njunih sprememb, zato bi jih s tem povozila. Naloži samo datoteke, ki so moje.
+Meja je čista: `data/` je Ai, `assets/` je Au, vse ostalo je moje in tvoje. Dokler se je držimo, se ne moremo povoziti.
+
+Če se ti to zdi preveč ročno: **GitHub Desktop** (desktop.github.com, 2 min namestitve) naredi vse to z dvema klikoma in tudi potegne njune spremembe k tebi. Predlagam, da ga naložiš, ko boš imela pet mirnih minut — ne zdaj.
 
 ---
 
