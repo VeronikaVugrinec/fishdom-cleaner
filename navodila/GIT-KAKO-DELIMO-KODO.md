@@ -1,7 +1,7 @@
 # Git — kako si delimo kodo (postavitev 20 min, potem prihrani ure)
 Odločitev 15.09.2026: uvajamo Git. Razlog: Ai popravlja `data/` večkrat na dan in Au oddaja slike, V pa zaradi ročnega objavljanja ne pride do pitcha. Z Gitom se aplikacija objavi sama.
 
-**Nihče ne bo tipkal git ukazov.** Vse gre skozi brskalnik in eno namizno aplikacijo.
+**Nihče ne bo tipkal git ukazov in nihče ne rabi ničesar namestiti.** Vse gre skozi brskalnik.
 
 ## Kaj se spremeni
 Zdaj: Ai pošlje datoteko V → V jo vloži → V povleče mapo na Netlify → čez 10 minut je gor.
