@@ -326,7 +326,7 @@ button{font-family:inherit; font-size:inherit; color:inherit; border:0; backgrou
 .mat .l{font-size:11.5px; color:var(--foam-2)}
 .mat .bar{height:3px; margin-top:8px; border-radius:2px; background:var(--kelp)}
 .impact-h{font-size:15px; font-weight:700}
-.tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:11px}
+.tablewrap{flex:none; overflow-x:auto; border:1px solid var(--line); border-radius:11px}
 .impact-table{width:100%; border-collapse:collapse; font-size:13px; min-width:330px}
 .impact-table th{
   text-align:left; padding:9px 12px; font-size:10.5px; letter-spacing:.1em;
