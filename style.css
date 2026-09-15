@@ -379,3 +379,28 @@ button{font-family:inherit; font-size:inherit; color:inherit; border:0; backgrou
   .pick{padding:9px 6px; font-size:12px}
   .pick .ico{font-size:19px}
 }
+
+/* --- zaslon zavrnitve: fotografija ni presla preverkov --- */
+.reject-wrap{
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:14px; padding:28px 24px; text-align:center;
+}
+.reject-mark{
+  width:62px; height:62px; border-radius:50%; display:grid; place-items:center;
+  font-size:27px; color:#ffd9cf; background:rgba(214,106,78,.16);
+  border:1px solid rgba(214,106,78,.45);
+}
+.reject-title{margin:0; font-size:21px; font-weight:700}
+.reject-lead{margin:0; font-size:14px; color:var(--foam-2); max-width:34ch}
+.reject-list{
+  list-style:none; margin:4px 0 0; padding:0; display:flex; flex-direction:column; gap:7px;
+  width:100%; max-width:330px;
+}
+.reject-list li{
+  border:1px solid rgba(214,106,78,.35); border-radius:10px; padding:9px 12px;
+  background:rgba(214,106,78,.08); font-size:13px; text-align:left; color:#ffd9cf;
+}
+.reject-note{
+  margin:6px 0 0; font-size:12px; line-height:1.5; color:var(--foam-2);
+  max-width:38ch; opacity:.85;
+}

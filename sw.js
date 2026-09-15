@@ -6,7 +6,7 @@
    POMEMBNO: ob vsaki spremembi kode povečaj številko v CACHE.
    Če je ne povečaš, bo telefon še naprej kazal staro različico. */
 
-const CACHE = "fishdom-2026-09-15-c";
+const CACHE = "fishdom-2026-09-15-d";
 
 const FILES = [
   "./",

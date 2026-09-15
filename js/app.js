@@ -53,7 +53,7 @@
   /* ---------- zasloni ---------- */
 
   var screens = {};
-  ["scan", "reveal", "collection", "aquarium", "impact"].forEach(function (n) {
+  ["scan", "reveal", "reject", "collection", "aquarium", "impact"].forEach(function (n) {
     screens[n] = el("screen-" + n);
   });
 
@@ -213,6 +213,16 @@
           zone: (window.ZONES && window.ZONES[0]) ? { name: window.ZONES[0].name, distanceM: 42 } : null,
           duplicateOf: null, fp: fp }
       : window.Verify.assess(result, pos, fp, state.scans);
+
+    // BLOKADA: vrsta se podeli samo, ce je na sliki res odpadek IN je slika
+    // nastala ob vodi. To sta edina preverka, ki presojata fotografijo samo.
+    // GPS in podvojitev ribe NE blokirata — GPS v zaprtem prostoru ali brez
+    // signala legitimno pade in bi demo umrl brez uporabnikove krivde.
+    if (v.checks.isLitter === false || v.checks.outdoors === false) {
+      renderReject(v, result);
+      go("reject");
+      return;
+    }
 
     var mult = v.verified ? 1 : (window.UNVERIFIED_MULTIPLIER || 0.4);
     var credits = Math.max(1, Math.round(mat.credits * mult));
@@ -471,6 +481,30 @@
       wrap.appendChild(b);
     });
   }
+
+  /* ---------- zavrnitev ---------- */
+
+  function renderReject(v, result) {
+    var razlogi = [];
+    if (v.checks.isLitter === false) {
+      razlogi.push("No waste visible in the photo" +
+        (result && result.item ? " (detected: " + result.item + ")" : ""));
+    }
+    if (v.checks.outdoors === false) {
+      razlogi.push("Not taken by the water" +
+        (result && result.setting ? " (setting: " + result.setting + ")" : ""));
+    }
+    var ul = el("reject-list");
+    ul.innerHTML = "";
+    razlogi.forEach(function (r) {
+      var li = document.createElement("li");
+      li.textContent = r;
+      ul.appendChild(li);
+    });
+  }
+
+  var rejectBtn = el("btn-reject-done");
+  if (rejectBtn) rejectBtn.addEventListener("click", function () { go("scan"); });
 
   /* ---------- vpliv ---------- */
 

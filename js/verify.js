@@ -4,7 +4,8 @@
    Štiri preverbe, vse poceni in vse zagovorljive pred žirijo:
 
    1. isLitter      — ali je na sliki sploh odpadek (pove Gemini)
-   2. outdoors      — ali je bila slika posneta zunaj, ob vodi (pove Gemini)
+   2. outdoors      — ali je bila slika posneta OB VODI: plaza, marina, obala.
+                      Navadno "zunaj" (ulica, dvorisce) ne zadosca. (pove Gemini)
    3. inZone        — ali je GPS znotraj registrirane cone čiščenja
    4. notDuplicate  — ali ista smet ni bila fotografirana že prej
 
@@ -86,7 +87,7 @@ window.Verify = (function () {
 
     var checks = {
       isLitter:     result.isLitter !== false,
-      outdoors:     result.setting ? ["beach", "marina", "waterside", "outdoor"].indexOf(result.setting) > -1 : null,
+      outdoors:     result.setting ? ["beach", "marina", "waterside"].indexOf(result.setting) > -1 : null,
       inZone:       pos ? !!zone : null,
       notDuplicate: fp ? !dup : null
     };
