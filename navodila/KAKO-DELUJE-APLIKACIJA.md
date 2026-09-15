@@ -39,32 +39,39 @@ Vse je **pokončno** (portrait), ker je to telefon.
 ## 4. Kako je sestavljena koda — kdo se česa dotika
 ```
 index.html            zaslon in ogrodje          → Claude (prek V)
-style.css             izgled                     → Claude (prek V)
 js/app.js             glavna logika              → Claude (prek V)
 js/fish.js            plavanje rib               → Claude (prek V)
-js/verify.js          štirje preverki            → Claude (prek V)
 netlify/functions/    pogovor z Gemini           → Claude (prek V)
+sw.js                 delovanje brez interneta   → Claude (prek V)
 
-data/species.js       12 vrst + kartice          → Ai
-data/litter-map.js    material → vrsta + viri    → Ai
-data/zones.js         GPS cone čiščenja          → Ai
+js/verify.js          štirje preverki            → Ai
+js/impact.js          občinski zaslon            → Ai
+js/db.js              Supabase                   → Ai
+data/*.js             vrste, materiali, cone     → Ai
 
+style.css             ves videz aplikacije       → Au
 assets/fish/*.png     slike rib                  → Au
 assets/deco/*.png     dekoracije                 → Au
 assets/icon-512.png   ikona aplikacije           → Au
 ```
-Datoteke v `data/` so **navadna besedila s seznami** — ne programi. Urejaš jih tako, da zamenjaš besedilo med narekovaji. Ne brišeš vejic, oklepajev in narekovajev.
+**Vsaka se dotika samo svojih datotek.** To je edino pravilo, ki preprečuje, da bi se med sabo povozile. Če rabiš spremembo v tuji datoteki, je ne popravljaj sama — javi V.
 
-Če slike za ribo ni, jo aplikacija nariše sama. Zato nič ne blokira: grafika lahko pride kadarkoli.
+Če slike za ribo ni, jo aplikacija nariše sama. Zato grafika lahko pride kadarkoli in nič ne blokira.
 
 ## 5. Kako pride delo v aplikacijo
-**V je edina, ki objavlja.** Ona povleče mapo na Netlify in v nekaj sekundah je nova različica na `fishdom-cleaner.netlify.app`.
+Repozitorij je **github.com/VeronikaVugrinec/fishdom-cleaner**, Netlify je povezan z njim: **vsak commit na `main` se sam objavi** na fishdom-cleaner.netlify.app v približno minuti. Nihče ne vleče map na Netlify in nihče ne čaka na V.
 
-- **Ai** shrani spremenjeno datoteko iz `data/` in jo pošlje V (Drive ali direktno na njen računalnik).
-- **Au** naloži slike v Drive mapo `grafika/fish` in `grafika/deco` in javi V.
-- V ju vloži in objavi. Objavljanje traja ~10 minut, zato ne pošiljata vsake spremembe posebej — zberita jih in pošljita v paketu.
+Delovni krog vsake od nas:
+```
+git pull
+... delo v VS Code ...
+git add .
+git commit -m "kaj si naredila"
+git push
+```
+Podrobnosti so v `GIT-KAKO-DELIMO-KODO.md`.
 
-**Ali bi uporabile Git?** Ne danes. Git bi res pomenil, da Ai objavlja sama, brez V — ampak postavitev repozitorija, povezava z Netlify in učenje ukazov je pol dneva, ki ga nimamo, konflikti med tremi ljudmi pa so ravno tista napaka, ki nam lahko ubije demo. Če pride do tega, da Ai popravlja `data/` več kot petkrat na dan in V zaradi tega ne uspe delati pitcha, se vrnemo k temu — takrat naredimo GitHub repo in Ai ureja datoteke kar v brskalniku, brez ukazov. Odločitev 15.09.2026: brez Gita.
+Če se site podre: V gre v Netlify → Deploys → zadnji dobri deploy → Publish deploy. Nazaj je v desetih sekundah in nič ni izgubljeno.
 
 ## 6. Trije roki
 - **danes zvečer** — IUCN vseh 12 vrst preverjen, GPS cone prave, stil grafike potrjen.

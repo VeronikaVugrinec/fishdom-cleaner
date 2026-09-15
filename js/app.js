@@ -238,6 +238,16 @@
     if (state.scans.length > 200) state.scans.length = 200;
     save();
 
+    // Ai-jin js/db.js poslje zapis v Supabase. Ce ga ni ali pade,
+    // aplikacija dela naprej z lokalnimi podatki.
+    try {
+      if (window.DB && window.DB.saveScan) {
+        var zapis = state.scans[0];
+        zapis.speciesId = sp.id;
+        Promise.resolve(window.DB.saveScan(zapis)).catch(function () {});
+      }
+    } catch (e) {}
+
     renderHud();
     renderReveal(sp, mat, v, credits, xp);
     go("reveal");
@@ -465,6 +475,8 @@
   /* ---------- vpliv ---------- */
 
   function renderImpact() {
+    // Ce Ai-jin js/impact.js narise svojo razlicico, nehamo tukaj.
+    if (window.IMPACT && window.IMPACT.render && window.IMPACT.render(state) !== false) return;
     el("impact-count").textContent = state.scans.length;
 
     var ok = state.scans.filter(function (s) { return s.verified; }).length;
