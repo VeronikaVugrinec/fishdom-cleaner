@@ -5,3 +5,4 @@ Claude outputs/
 node_modules/
 *.zip
 ~$*
+.gh-token
