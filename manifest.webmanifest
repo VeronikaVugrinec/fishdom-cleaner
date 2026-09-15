@@ -1,0 +1,16 @@
+{
+  "name": "Fishdom Cleaner",
+  "short_name": "Fishdom",
+  "description": "Pick up litter on the shore, collect Adriatic species, build your reef.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#04141c",
+  "theme_color": "#04141c",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

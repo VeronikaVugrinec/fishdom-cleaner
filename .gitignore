@@ -1,0 +1,6 @@
+# Delovni izpisi, ne gredo v repozitorij
+Claude outputs/
+.DS_Store
+.netlify/
+node_modules/
+*.zip
