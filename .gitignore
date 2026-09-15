@@ -4,3 +4,4 @@ Claude outputs/
 .netlify/
 node_modules/
 *.zip
+~$*
