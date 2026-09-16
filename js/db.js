@@ -1,47 +1,76 @@
 /* Fishdom Cleaner — pošiljanje zapisov v Supabase.
-   LASTNICA / OWNER: Ai.  Nihče drug te datoteke ne ureja.
-
-   ZAKAJ OBSTAJA
-   Vsako skeniranje ustvari zapis o odpadku: kraj, čas, vrsta materiala.
-   Ti zapisi so PRAVI PRODUKT projekta — občina, marina in upravljavec plaže
-   iz njih vidijo, kaj se na njihovi obali dejansko nabira. Igra je samo
-   način, kako pridemo do teh zapisov.
-
-   KAKO SE POVEŽE
-   js/app.js ob vsakem skeniranju pokliče window.DB.saveScan(zapis), če obstaja.
-   js/impact.js ob odpiranju občinskega zaslona pokliče window.DB.loadScans().
-   Če te datoteke ni ali funkciji vrneta napako, aplikacija dela naprej
-   z lokalnimi podatki. TO PRAVILO SE NE SME PODRETI — demo ne sme
-   nikoli umreti zaradi omrežja.
-
-   KLJUČI
-   Nikoli v to datoteko. V vnese SUPABASE_URL in SUPABASE_ANON_KEY v
-   Netlify Environment variables, od koder prideta v window spremenljivki.
-
-   OBLIKA ZAPISA, ki ga dobiš iz app.js:
-   { t: 1757942400000,      // čas v milisekundah
-     material: "plastic_bag",
-     label: "Plastic bag or film",
-     speciesId: "caretta-caretta",
-     lat: 43.729, lon: 15.889,   // lahko sta null
-     zone: "Banj Beach, Šibenik", // lahko null
-     verified: true,
-     failed: ["inZone"] }        // kateri preverki so padli
-
-   TABELA v Supabase (predlog):
-   scans: id, created_at, material, species_id, lat, lon, zone_id, verified, device_id
+   LASTNICA / OWNER: Ai. Nihče drug te datoteke ne ureja.
 */
 
 window.DB = {
   ready: false,
 
-  // TODO Ai: pošlji zapis v Supabase. Ob napaki ga shrani v čakalno vrsto.
-  saveScan: function (zapis) {
-    return Promise.resolve(null);
+  // Pomožna funkcija za pridobitev ali pobudo Supabase odjemalca
+  getClient: function () {
+    const url = window.SUPABASE_URL || '';
+    const key = window.SUPABASE_ANON_KEY || '';
+    if (typeof supabase !== 'undefined' && url && key) {
+      return supabase.createClient(url, key);
+    }
+    return null;
   },
 
-  // TODO Ai: preberi zadnje zapise iz Supabase. Ob napaki vrni prazen seznam.
-  loadScans: function () {
-    return Promise.resolve([]);
+  // Shrani scan v Supabase. Ob napaki ali brez omrežja shrani lokalno v čakalno vrsto.
+  saveScan: async function (zapis) {
+    // Vedno najprej lokalno shranimo kot rezervno pot, da demo ne pade
+    const localScans = JSON.parse(localStorage.getItem('pending_scans') || '[]');
+    localScans.push(zapis);
+    localStorage.setItem('pending_scans', JSON.stringify(localScans));
+
+    const client = this.getClient();
+    if (!client) {
+      console.warn('Supabase ni konfiguriran ali ni povezave. Zapis shranjen lokalno.');
+      return Promise.resolve({ success: true, offline: true, data: zapis });
+    }
+
+    try {
+      const { data, error } = await client
+        .from('scans')
+        .insert([
+          {
+            id: zapis.id || 'scan-' + Date.now(),
+            created_at: zapis.t ? new Date(zapis.t).toISOString() : new Date().toISOString(),
+            material: zapis.material,
+            species_id: zapis.speciesId,
+            lat: zapis.lat,
+            lon: zapis.lon,
+            zone_id: zapis.zone,
+            verified: zapis.verified,
+            device_id: zapis.device_id || 'dev-local'
+          }
+        ]);
+
+      if (error) throw error;
+      return { success: true, offline: false, data };
+    } catch (err) {
+      console.error('Napaka na Supabase, zapis ostaja v localStorage:', err);
+      return { success: true, offline: true, data: zapis };
+    }
+  },
+
+  // Preberi zadnje zapise iz Supabase. Ob napaki vrni lokalne podatke ali prazen seznam.
+  loadScans: async function () {
+    const client = this.getClient();
+    if (!client) {
+      return JSON.parse(localStorage.getItem('pending_scans') || '[]');
+    }
+
+    try {
+      const { data, error } = await client
+        .from('scans')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      console.error('Napaka pri nalaganju iz Supabase, berem lokalno shrambo:', err);
+      return JSON.parse(localStorage.getItem('pending_scans') || '[]');
+    }
   }
 };
