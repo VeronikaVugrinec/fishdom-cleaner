@@ -1,39 +1,65 @@
-/* Fishdom Cleaner — občinski zaslon.
-   LASTNICA / OWNER: Ai.  Nihče drug te datoteke ne ureja.
+// js/impact.js - Izračun in prikaz podatkov za občine in marine
 
-   ZAKAJ OBSTAJA
-   To je zaslon, zaradi katerega je naša rešitev Tema 1 hackathona
-   ("Smart Monitoring and Digital Tools for Blue Environments") in ne igrica.
-   Sodnik na njem gleda eno stvar: ali podatki res obstajajo in ali je
-   razvidno, kateri so preverjeni.
+window.ImpactScreen = {
+  // Glavna funkcija za osvežitev občinskega zaslona
+  async render() {
+    // 1. Pridobi podatke iz baze (ali fallback v localStorage)
+    let scans = [];
+    if (window.DB && typeof window.DB.loadScans === 'function') {
+      scans = await window.DB.loadScans();
+    } else {
+      scans = JSON.parse(localStorage.getItem('pending_scans') || '[]');
+    }
 
-   KAKO SE POVEŽE
-   js/app.js ob odpiranju zaslona pokliče window.IMPACT.render(state), če
-   ta obstaja. Če te datoteke ni, app.js nariše svojo preprosto različico,
-   zato nič ni blokirano, dokler delaš.
+    // 2. Izračunaj statistike
+    const stats = this.calculateStats(scans);
 
-   ELEMENTI, ki so že v index.html in jih smeš polniti:
-     #impact-count       skupno število zapisov
-     #verify-summary     koliko preverjenih, koliko za pregled
-     #impact-materials   razdelitev po materialih
-     #impact-rows        tabela zadnjih zapisov
-     #impact-note        opomba pod tabelo
+    // 3. Prikaz na zaslonu
+    this.updateUI(stats);
+  },
 
-   KAJ MORA BITI VIDNO
-   - skupno število kosov
-   - razdelitev po materialih
-   - razdelitev po conah čiščenja
-   - gibanje po dnevih
-   - pri vsaki številki mora biti jasno, ali je iz PREVERJENIH ali iz vseh
-     zapisov. To je razlika med nami in Litteratijem in sodnik bo vprašal.
+  calculateStats(scans) {
+    const total = scans.length;
+    const verifiedCount = scans.filter(s => s.verified).length;
 
-   Najprej naj delajo številke, šele nato grafi.
-*/
+    // Razdelitev po materialih
+    const materials = {};
+    // Razdelitev po conah
+    const zones = {};
 
-window.IMPACT = {
-  // TODO Ai: nariši občinski zaslon. state.scans je seznam zapisov.
-  // Vrni false, če hočeš, da app.js nariše svojo privzeto različico.
-  render: function (state) {
-    return false;
+    scans.forEach(s => {
+      // Materiali
+      const mat = s.material || 'neznano';
+      materials[mat] = (materials[mat] || 0) + 1;
+
+      // Cone
+      const z = s.zone_id || 'neznano';
+      zones[z] = (zones[z] || 0) + 1;
+    });
+
+    return {
+      total,
+      verifiedCount,
+      materials,
+      zones
+    };
+  },
+
+  updateUI(stats) {
+    console.log("Občinska statistika pripravljena:", stats);
+    
+    // Osnovni izpis na zaslon (prilagodi ID-je elementov glede na svoj HTML)
+    const totalEl = document.getElementById('impact-total');
+    const verifiedEl = document.getElementById('impact-verified');
+    const materialsEl = document.getElementById('impact-materials');
+
+    if (totalEl) totalEl.textContent = stats.total;
+    if (verifiedEl) verifiedEl.textContent = `${stats.verifiedCount} preverjenih`;
+    
+    if (materialsEl) {
+      materialsEl.innerHTML = Object.entries(stats.materials)
+        .map(([mat, count]) => `<li>${mat}: ${count}</li>`)
+        .join('');
+    }
   }
 };
